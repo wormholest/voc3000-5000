@@ -358,13 +358,31 @@ function renderCloze() {
   });
 }
 
+<script>
  /* ---------- 啟動 ---------- */
     renderChips(); renderList(); renderCloze(); stats();
 </script>
 
-<!-- 正確位置：<footer> 必須在 </body> 裡面 -->
-<footer>
-  <p>資料來源：LiveABC高頻字彙完全攻略｜© 2026＠Maxine</p>
+<!-- 修正 1：CSS 專屬樣式，避免與 .card 衝突，並完美支援深淺色切換 -->
+<style>
+  .site-footer {
+    text-align: center;
+    padding: 30px 14px;
+    margin-top: 40px;
+    font-size: 0.88rem;
+    color: var(--mu); /* 使用你設定好的網頁次要文字顏色 */
+    border-top: 1px solid var(--bd); /* 淡淡的水平分隔線 */
+    font-family: inherit;
+  }
+  .site-footer p {
+    margin: 4px 0;
+  }
+</style>
+
+<!-- 修正 2：<footer> 放置在 </body> 的正上方，並套用專屬 className -->
+<footer class="site-footer">
+  <p>資料來源：LiveABC高頻字彙完全攻略</p>
+  <p>© 2026 @Maxine</p>
 </footer>
 
 </body>
