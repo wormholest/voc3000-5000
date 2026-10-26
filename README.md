@@ -1,4 +1,3 @@
-<!DOCTYPE html>
 <html lang="zh-TW">
 <head>
 <meta charset="UTF-8">
@@ -359,11 +358,14 @@ function renderCloze() {
   });
 }
 
-/* ---------- 啟動 ---------- */
-renderChips(); renderList(); renderCloze(); stats();
+ /* ---------- 啟動 ---------- */
+    renderChips(); renderList(); renderCloze(); stats();
 </script>
-</body>
+
+<!-- 正確位置：<footer> 必須在 </body> 裡面 -->
 <footer>
   <p>資料來源：LiveABC高頻字彙完全攻略｜© 2026＠Maxine</p>
 </footer>
+
+</body>
 </html>
