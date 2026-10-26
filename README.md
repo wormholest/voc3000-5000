@@ -358,28 +358,11 @@ function renderCloze() {
   });
 }
 
-    /* ---------- 啟動 ---------- */
-    renderChips(); renderList(); renderCloze(); stats();
+/* ---------- 啟動 ---------- */
+renderChips(); renderList(); renderCloze(); stats();
 </script>
-
-<style>
-  .site-footer {
-    text-align: center;
-    padding: 30px 14px;
-    margin-top: 40px;
-    font-size: 0.88rem;
-    color: var(--mu);
-    border-top: 1px solid var(--bd);
-  }
-  .site-footer p {
-    margin: 4px 0;
-  }
-</style>
-
-<footer class="site-footer">
-  <p>資料來源：LiveABC高頻字彙完全攻略</p>
-  <p>© 2026 @Maxine</p>
+<footer>
+  <p>資料來源：LiveABC高頻字彙完全攻略｜© 2026＠Maxine</p>
 </footer>
-
 </body>
 </html>
