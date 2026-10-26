@@ -2,13 +2,16 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="light dark">
 <title>高頻單字 3000–5000｜單字・字卡・題庫</title>
 <style>
 :root{--bg:#f4f6fb;--card:#fff;--tx:#1b2333;--mu:#667085;--bd:#e3e8f0;--pri:#4f46e5;--pri2:#4338ca;--soft:#eef0ff;--ok:#059669;--okb:#d1fae5;--no:#dc2626;--nob:#fee2e2;--warn:#fff7e0;--sh:0 1px 3px rgba(16,24,40,.08),0 4px 16px rgba(16,24,40,.05)}
-@media(prefers-color-scheme:dark){:root{--bg:#0f1420;--card:#171e2e;--tx:#e8ecf5;--mu:#97a1b6;--bd:#2a3347;--pri:#818cf8;--pri2:#6366f1;--soft:#232a45;--ok:#34d399;--okb:#12382c;--no:#f87171;--nob:#43191b;--warn:#3a3218;--sh:0 1px 3px rgba(0,0,0,.4)}}
+:root{color-scheme:light dark}:root[data-theme=light]{color-scheme:light}
+:root[data-theme=dark]{color-scheme:dark;--bg:#0f1420;--card:#171e2e;--tx:#e8ecf5;--mu:#97a1b6;--bd:#2a3347;--pri:#818cf8;--pri2:#6366f1;--soft:#232a45;--ok:#34d399;--okb:#12382c;--no:#f87171;--nob:#43191b;--warn:#3a3218;--sh:0 1px 3px rgba(0,0,0,.4)}
+@media(prefers-color-scheme:dark){:root:not([data-theme=light]){--bg:#0f1420;--card:#171e2e;--tx:#e8ecf5;--mu:#97a1b6;--bd:#2a3347;--pri:#818cf8;--pri2:#6366f1;--soft:#232a45;--ok:#34d399;--okb:#12382c;--no:#f87171;--nob:#43191b;--warn:#3a3218;--sh:0 1px 3px rgba(0,0,0,.4)}}
 *{box-sizing:border-box;margin:0;padding:0}
 body{background:var(--bg);color:var(--tx);font:16px/1.6 -apple-system,BlinkMacSystemFont,"Segoe UI","PingFang TC","Noto Sans TC","Microsoft JhengHei",sans-serif;padding-bottom:60px}
-header{background:linear-gradient(135deg,#4f46e5,#7c3aed 60%,#db2777);color:#fff;padding:28px 16px 22px;text-align:center}
+header{position:relative;background:linear-gradient(135deg,#4f46e5,#7c3aed 60%,#db2777);color:#fff;padding:28px 16px 22px;text-align:center}
 header h1{font-size:1.7rem;letter-spacing:.04em}header p{opacity:.85;font-size:.9rem;margin-top:4px}
 .stats{display:flex;justify-content:center;gap:10px;flex-wrap:wrap;margin-top:14px}
 .stat{background:rgba(255,255,255,.18);border-radius:12px;padding:6px 14px;font-size:.82rem}.stat b{font-size:1.1rem;display:block}
@@ -21,7 +24,12 @@ nav button.active,nav button:hover{background:var(--pri);border-color:var(--pri)
 .panel{background:var(--card);border-radius:16px;box-shadow:var(--sh);padding:18px;margin-bottom:16px}
 .toolbar{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:12px}
 input[type=text],select{padding:10px 12px;border:1.5px solid var(--bd);border-radius:10px;background:var(--card);color:var(--tx);font-size:1rem;font-family:inherit}
+input[type=text],select{-webkit-appearance:none;appearance:none;-webkit-text-fill-color:var(--tx);opacity:1;font-size:16px;background-color:var(--card)}
+input[type=text]:disabled,select:disabled{-webkit-text-fill-color:var(--tx);color:var(--tx);opacity:.75;background-color:var(--card)}
+input::placeholder{color:var(--mu);-webkit-text-fill-color:var(--mu);opacity:1}
+select{padding-right:30px;background-image:linear-gradient(45deg,transparent 50%,var(--mu) 50%),linear-gradient(135deg,var(--mu) 50%,transparent 50%);background-position:calc(100% - 17px) 50%,calc(100% - 12px) 50%;background-size:5px 5px;background-repeat:no-repeat}
 input[type=text]:focus,select:focus{outline:none;border-color:var(--pri)}
+body,.panel,.face,.opt,.cs{-webkit-text-fill-color:currentColor}
 .grow{flex:1;min-width:180px}
 .seg{display:inline-flex;border:1.5px solid var(--bd);border-radius:10px;overflow:hidden}
 .seg button{padding:8px 14px;border:0;background:var(--card);color:var(--tx);cursor:pointer;font-size:.92rem}
@@ -86,6 +94,7 @@ tr.grp td{background:var(--soft);color:var(--pri);font-weight:700;padding:9px 12
 </head>
 <body>
 <header>
+  <button id="themeBtn" class="btn ghost" style="position:absolute;top:10px;right:10px;padding:5px 12px;font-size:.8rem;background:rgba(255,255,255,.22);color:#fff"></button>
   <h1>高頻單字 3000–5000</h1>
   <p>依單元／字母瀏覽・字卡複習・題庫練習・文意選填</p>
   <div class="stats"><div class="stat"><b id="s-total">0</b>單字</div><div class="stat"><b id="s-known">0</b>已熟悉</div><div class="stat"><b id="s-wrong">0</b>錯題本</div></div>
@@ -323,7 +332,10 @@ function showQ() {
   else h += `<div class="opts">${q.opts.map((o, i) => `<button class="opt" data-i="${i}">${String.fromCharCode(65 + i)}. ${esc(o.t)}</button>`).join('')}</div>`;
   h += `<div id="fbk"></div>`;
   box.innerHTML = h; $('#qBack').onclick = backToSetup;
-  if (q.mode === 'spell') { const inp = $('#sp'); inp.focus(); const go = () => answer(inp.value.trim().toLowerCase() === q.v.word.toLowerCase(), inp.value.trim()); $('#spOk').onclick = go; inp.onkeydown = e => e.key === 'Enter' && go(); }
+  if (q.mode === 'spell') { const inp = $('#sp'); inp.focus(); let done = false;
+    const submit = () => { if (done) return; const val = inp.value.trim(); if (!val) { inp.focus(); inp.placeholder = '請先輸入單字再送出'; return; } done = true; answer(val.toLowerCase() === q.v.word.toLowerCase(), val); };
+    $('#spOk').onclick = submit;
+    inp.addEventListener('keydown', e => { if (e.key === 'Enter' && !e.isComposing) { e.preventDefault(); submit(); } }); }
   else box.querySelectorAll('.opt').forEach(b => b.onclick = () => { const o = q.opts[+b.dataset.i]; box.querySelectorAll('.opt').forEach((x, i) => { x.disabled = true; if (q.opts[i].ok) x.classList.add('c'); }); if (!o.ok) b.classList.add('x'); answer(o.ok, o.t); });
 }
 function answer(ok, given) {
@@ -357,6 +369,13 @@ function renderCloze() {
     $('#passages').appendChild(d);
   });
 }
+
+/* ---------- 主題 ---------- */
+const themes = ['auto', 'light', 'dark'], tName = { auto: '🌓 自動', light: '☀️ 淺色', dark: '🌙 深色' };
+let theme = store.get('hf_theme', 'auto');
+function applyTheme() { const r = document.documentElement; theme === 'auto' ? r.removeAttribute('data-theme') : r.setAttribute('data-theme', theme); $('#themeBtn').textContent = tName[theme]; }
+$('#themeBtn').onclick = () => { theme = themes[(themes.indexOf(theme) + 1) % 3]; store.set('hf_theme', theme); applyTheme(); };
+applyTheme();
 
 /* ---------- 啟動 ---------- */
 renderChips(); renderList(); renderCloze(); stats();
